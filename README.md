@@ -166,7 +166,7 @@
 ## The input file format
 ### -rt TXT
 Please enter paired-end reads separated by tabs.
-'''
+```
 P1 reads
 /Full/Path/P1.1.fq	/Full/Path/P1.2.fq
 P2 reads
@@ -177,10 +177,10 @@ B bulk reads
 /Full/Path/B_bulk.1.fq	/Full/Path/B_bulk.2.fq
 F1 reads
 /Full/Path/F1.1.fq	/Full/Path/F1.2.fq
-'''
+```
 
 If you do not use P2, B_bulk, or F1, please do not write fq. In that case, please do not delete P2 reads, B bulk reads, and F1 reads, but fill them in.
-'''
+```
 P1 reads
 /Full/Path/P1.1.fq	/Full/Path/P1.2.fq
 P2 reads
@@ -188,10 +188,10 @@ A bulk reads
 /Full/Path/A_bulk.1.fq	/Full/Path/A_bulk.2.fq
 B bulk reads
 F1 reads
-'''
+```
 
 If the read is divided into multiple FQs, it can be written on a new line.
-'''
+```
 P1 reads
 /Full/Path/P1_1.1.fq	/Full/Path/P1_1.2.fq
 /Full/Path/P1_2.1.fq	/Full/Path/P1_2.2.fq
@@ -201,11 +201,11 @@ A bulk reads
 /Full/Path/A_bulk.1.fq	/Full/Path/A_bulk.2.fq
 B bulk reads
 F1 reads
-'''
+```
 
 ### -bt TXT
 Please enter bam files.
-'''
+```
 P1 bam
 /Full/Path/P1.bam
 P2 bam
@@ -216,10 +216,10 @@ B bulk bam
 /Full/Path/B_bulk.bam
 F1 bam
 /Full/Path/F1.bam
-'''
+```
 
 If you do not use P2, B_bulk, or F1, please do not write bam. In that case, please do not delete P2 bam, B bulk bam, and F1 bam, but fill them in.
-'''
+```
 P1 bam
 /Full/Path/P1.bam
 P2 bam
@@ -227,11 +227,11 @@ A bulk bam
 /Full/Path/A_bulk.bam
 B bulk bam
 F1 bam
-'''
+```
 
 ## The example of format execution
 example1: mqtlseq
-'''
+```
 mqtlseq -r /Full/Path/refarence.fa \
         -rt /Full/Path/reads_PATH.txt\
         -p1 High_cultivar \
@@ -242,10 +242,10 @@ mqtlseq -r /Full/Path/refarence.fa \
         -window_size 5000\
         -step_size 1000\
         -min_plot 1
-'''
+```
 
 example2: mqtlseq_mpileup
-'''
+```
 mqtlseq_mpileup -r /Full/Path/refarence.fa \
                 -bt /Full/Path/bams_PATH.txt\
                 -p1 High_cultivar \
@@ -256,10 +256,10 @@ mqtlseq_mpileup -r /Full/Path/refarence.fa \
                 -window_size 5000\
                 -step_size 1000\
                 -min_plot 1
-'''
+```
 
 example3: mqtlseq_snpindex
-'''
+```
 mqtlseq_snpindex -vcf /Full/Path/SNP_called.vcf \
                  -p1 High_cultivar \
                  -p2 Low_cultivar \
@@ -270,10 +270,10 @@ mqtlseq_snpindex -vcf /Full/Path/SNP_called.vcf \
                  -window_size 5000\
                  -step_size 1000\
                  -min_plot 1
-'''
+```
 
 example4: mqtlseq_plot
-'''
+```
 mqtlseq_plot -txt /Full/Path/SNP_called.vcf \
              -p1 High_cultivar \
              -p2 True \
@@ -284,11 +284,11 @@ mqtlseq_plot -txt /Full/Path/SNP_called.vcf \
              -window_size 5000\
              -step_size 1000\
              -min_plot 1
-'''
+```
 
 ## The output file format
 ### output directory
-'''
+```
 QTL-seq---log
         |-10_ref
         |-11_bam
@@ -302,11 +302,11 @@ QTL-seq---log
         |-24_filt
         |-30_sim
         |-40_plot
-'''
+```
 
 ### 10_ref
 The index files of reference are output.
-'''
+```
 ref.fa              linked reference file
 ref.fa.bwt          index files
 ref.fa.amb          index files
@@ -314,11 +314,11 @@ ref.fa.ann          index files
 ref.fa.pac          index files
 ref.fa.sa           index files
 ref.fa.fai          index files
-'''
+```
 
 ### 11_bam
 The aligned results of P1 are output.
-'''
+```
 mem.txt             command file 1
 view.txt            command file 2
 merge.txt           command file 3
@@ -330,35 +330,35 @@ rm.txt              command file 8
 P1.bam              P1 bam file
 P1.bam.bai          P1 bam index file
 P1.coverage.txt     P1 coverage file
-'''
+```
 
 ### 12_vcf
 The result of calling SNP with bcftools is output.
-'''
+```
 mpileup.txt         command file 1
 call.txt            command file 2
 filter.txt          command file 3
 rm.txt              command file 4
 P1.vcf              vcf file that called SNP of P1
-'''
+```
 
 ### 13_snpindex
 The result of calculating SNP-index is output.
-'''
+```
 P1.snp_index.txt    Text file containing SNP-index of P1
-'''
+```
 Chromosome name, position, reference base, SNP base, depth, and SNP-index are listed in tab-separated format.
 
 ### 14_filt
 The result of selecting the SNP to be substituted with the reference will be output.
-'''
+```
 P1_homo.snp_index.txt    A file in which the depth>=mindepth and SNP-index=1 is selected from P1.snp_index.txt
-'''
+```
 The file format is the same as P1.snp_index.txt.
 
 ### 20_ref
 The index files of reference are output.
-'''
+```
 P1.fa              Fasta file with P1 SNPs substituted
 P1.fa.bwt          index files
 P1.fa.amb          index files
@@ -366,11 +366,11 @@ P1.fa.ann          index files
 P1.fa.pac          index files
 P1.fa.sa           index files
 P1.fa.fai          index files
-'''
+```
 
 ### 21_bam
 The aligned results of P1 are output.
-'''
+```
 mem.txt                 command file 1
 view.txt                command file 2
 merge.txt               command file 3
@@ -394,24 +394,24 @@ A_bulk.coverage.txt     A_bulk coverage file
 B_bulk.bam              B_bulk bam file
 B_bulk.bam.bai          B_bulk bam index file
 B_bulk.coverage.txt     B_bulk coverage file
-'''
+```
 
 ### 22_vcf
 The result of calling SNP with bcftools is output.
-'''
+```
 mpileup.txt                   command file 1
 call.txt                      command file 2
 filter.txt                    command file 3
 rm.txt                        command file 4
 P1.P2.F1.A_bulk.B_bulk.vcf    vcf file that called SNP of P1, P2, F1, A_bulk and B_bulk
-'''
+```
 P1, P2, F1, A_bulk and B_bulk are called in this order, and samples not in the input are omitted.
 
 ### 23_snpindex
 The result of calculating SNP-index is output.
-'''
+```
 P1.P2.F1.A_bulk.B_bulk.snp_index.txt    Text file containing SNP-index of P1, P2, F1, A_bulk and B_bulk
-'''
+```
 Chromosome name, position, reference base, SNP base, depth, and SNP-index are listed in tab-separated format.
 P1, P2, F1, A_bulk and B_bulk are called in this order, and samples not in the input are omitted.
 
@@ -419,63 +419,63 @@ P1, P2, F1, A_bulk and B_bulk are called in this order, and samples not in the i
 The selection results of the 3 filter steps are output.
 
 Step1: P1 homo
-'''
+```
 P1_homo.P2.F1.A_bulk.B_bulk.snp_index.txt    A file in which the depth>=mindepth and SNP-index=0 in P1 is selected
-'''
+```
 The file format is the same as P1.P2.F1.A_bulk.B_bulk.snp_index.txt
 
 Step2: P2 homo
-'''
+```
 P1_homo.P2_homo.F1.A_bulk.B_bulk.snp_index.txt    A file in which the depth>=mindepth and SNP-index=1 in P2 is selected
-'''
+```
 The file format is the same as P1.P2.F1.A_bulk.B_bulk.snp_index.txt
 
 Step3: F1 hetero
-'''
+```
 P1_homo.P2_homo.F1_hetero.A_bulk.B_bulk.snp_index.txt    The range of SNP-index value on heterozygous SNPs
-'''
+```
 The file format is the same as P1.P2.F1.A_bulk.B_bulk.snp_index.txt
 
-'''
+```
 F1_sim.txt        Range of SNP-index values for heterozygous SNPs(95% confidence interval) used in F1 hetero filter
-'''
+```
 Depth, minimum value, and maximum value are listed separated by tabs.
 
 ### 30_sim
 The calculation result of the confidence interval in bulk is output.
-'''
+```
 F2_20_sim.txt     Range of SNP-index and delta SNP-index values for bulk sample
-'''
+```
 Depth, 99% under interval of SNP-index, 99% top interval of SNP-index, 95% under interval of SNP-index, 95% top interval of SNP-index, 99% under interval of delta SNP-index, 99% Top interval of delta SNP-index, 95% under interval of delta SNP-index, 95% top interval of delta SNP-index are listed separated by tabs.
 
 ### 40_plot
 Depth filter and graph results in bulk are output.
-'''
+```
 A_bulk.snp_index.sim.txt    A file containing the SNP-index of the position showing A_bulk depth>=mindepth.
 B_bulk.snp_index.sim.txt    A file containing the SNP-index of the position showing B_bulk depth>=mindepth.
-'''
+```
 Chromosome, position, reference base, SNP base, depth of A_bulk, SNP-index of A_bulk, under and top of 99% confidence interval of SNP-index, under and top of 95% confidence interval of SNP-index, delta SNP The under and top of the 99% confidence interval for delta SNP-index and the under and top of the 95% confidence interval for delta SNP-index are tab-separated.
 
-'''
+```
 A_bulk-B_bulk.snp_index.sim.txt    A file containing the delta SNP-index of the position.
-'''
+```
 Chromosome, position, reference base, SNP base, higher depth of A_bulk and B_bulk, delta SNP-index(A_bulk-B_bulk), under and top of 99% confidence interval of SNP-index, under and top of 95% confidence interval of SNP-index, delta SNP The under and top of the 99% confidence interval for delta SNP-index and the under and top of the 95% confidence interval for delta SNP-index are tab-separated.
 
-'''
+```
 A_bulk.2000000bp_window.50000bp_step.txt    A file containing the sliding window average of SNP-index in A-bulk.
 B_bulk.2000000bp_window.50000bp_step.txt    A file containing the sliding window average of SNP-index in B-bulk.
-'''
+```
 Chromosome, position, A_bulk SNP-index average values, under and top of 99% confidence interval of SNP-index, under and top of 95% confidence interval of SNP-index, delta SNP The under and top of the 99% confidence interval for delta SNP-index and the under and top of the 95% confidence interval for delta SNP-index are output in tab-separated format.
 
-'''
+```
 A_bulk-B_bulk.2000000bp_window.50000bp_step.txt    A file containing the sliding window average of delta SNP-index.
-'''
+```
 Chromosome, position, delta SNP-index average values, under and top of 99% confidence interval of SNP-index, under and top of 95% confidence interval of SNP-index, delta SNP The under and top of the 99% confidence interval for delta SNP-index and the under and top of the 95% confidence interval for delta SNP-index are output in tab-separated format.
 
-'''
+```
 A_bulk.png
 B_bulk.png
 A_bulk-B_bulk.png
-'''
+```
 Dots indicate SNP-index or delta SNP-index at each chromosomal position, and the red line shows the sliding window average value.
 Orange and green lines indicate 99% and 95% confidence intervals, respectively.
