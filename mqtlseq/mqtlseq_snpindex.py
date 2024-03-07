@@ -1,30 +1,25 @@
 #!/usr/bin/env python3
 
+from mqtlseq.__init__ import __version__
 import os
 import shutil
-import sys
 import argparse
-from utils import time_stamp, clean_cmd, call_log
-from refindex import RefIndex
-from alignment import Alignment
-from mpileup import Mpileup
-from snpindex import Snpindex
-from filt import Filt
-from makeref import Makeref
-from sim_range import Sim_range
-from qtlplot import Qtlplot
+from mqtlseq.utils import time_stamp, clean_cmd, call_log
+from mqtlseq.refindex import RefIndex
+from mqtlseq.alignment import Alignment
+from mqtlseq.mpileup import Mpileup
+from mqtlseq.snpindex import Snpindex
+from mqtlseq.filt import Filt
+from mqtlseq.makeref import Makeref
+from mqtlseq.sim_range import Sim_range
+from mqtlseq.qtlplot import Qtlplot
 
 
-class QTLseq(object):
+class Mqtlseq_snpindex(object):
 
     def __init__(self):
 
         parser = argparse.ArgumentParser(description='qtlseq2 pipeline 2022/11/15')
-
-        parser.add_argument('-r','--ref_fa',
-                            required=True,
-                            type=str,
-                            help='Referance fasta file.')
 
         parser.add_argument('-p1','--p1_name',
                             required=False,
@@ -35,8 +30,13 @@ class QTLseq(object):
         parser.add_argument('-p2','--p2_name',
                             required=False,
                             type=str,
-                            default="P2",
-                            help='P2 name. [P2]')
+                            default="",
+                            help='P2 name. [False]')
+
+        parser.add_argument('-f1','--f1',
+                            required=False,
+                            default=False,
+                            help='F1 in vcf? [False]')
 
         parser.add_argument('-a','--bulkA_name',
                             required=False,
@@ -47,7 +47,7 @@ class QTLseq(object):
         parser.add_argument('-b','--bulkB_name',
                             required=False,
                             type=str,
-                            default="B_bulk",
+                            default="",
                             help='B bulk name. [B_bulk]')
 
         parser.add_argument('-o','--output_dir',
@@ -111,11 +111,11 @@ class QTLseq(object):
                             default=10,
                             help='Minumum plot in window size. [10]')
 
-        parser.add_argument('-bt','--bam_txt',
+        parser.add_argument('-vcf','--vcf',
                             required=True,
                             type=str,
                             default="",
-                            help='Path of reads_PATH.txt')
+                            help='Path of vcf file')
 
         parser.add_argument('-filt_bias','--filt_bias',
                             required=False,
@@ -125,9 +125,9 @@ class QTLseq(object):
 
         args = parser.parse_args()
 
-        self.ref_fa=args.ref_fa
         self.p1_name=args.p1_name
         self.p2_name=args.p2_name
+        self.f1=args.f1
         self.bulkA_name=args.bulkA_name
         self.bulkB_name=args.bulkB_name
         self.output_dir=args.output_dir
@@ -140,7 +140,7 @@ class QTLseq(object):
         self.window_size=args.window_size
         self.step_size=args.step_size
         self.min_plot=args.min_plot
-        self.bam_txt=args.bam_txt
+        self.vcf=args.vcf
         self.filt_bias=args.filt_bias
 
         self.filt_pattern="2"
@@ -149,93 +149,40 @@ class QTLseq(object):
         self.sim_ind='{0}_{1}_sim.txt'.format(self.generation,self.individual)
 
         self.output_name=""
-        self.bam_list=""
-
-        self.p1_bam=""
-        self.p2_bam=""
-        self.f1_bam=""
-        self.bulkA_bam=""
-        self.bulkB_bam=""
-        in_count=0
         self.filt_count=1
         self.bulk_info=self.bulkA_name
         self.plot_name=self.p1_name+"_homo"
 
-        r_txt = open(self.bam_txt, "r")
-        for r_txt_line in r_txt:
-            r_txt_line=r_txt_line.replace('\n', '')
-            if r_txt_line == "P1 bam":
-                in_count=1
-            elif r_txt_line == "P2 bam":
-                in_count=2
-            elif r_txt_line == "A bulk bam":
-                in_count=3
-            elif r_txt_line == "B bulk bam":
-                in_count=4
-            elif r_txt_line == "F1 bam":
-                in_count=5
-            elif in_count==1:
-                self.p1_bam=r_txt_line
-            elif in_count==2:
-                self.p2_bam=r_txt_line
-            elif in_count==3:
-                self.bulkA_bam=r_txt_line
-            elif in_count==4:
-                self.bulkB_bam=r_txt_line
-            elif in_count==5:
-                self.f1_bam=r_txt_line
-        r_txt.close()
-
-        if self.p1_bam == "":
-            print('Not setting P1 bam. Cheak {0}'.format(self.bam_txt))
-            sys.exit()
-
-        if self.bulkA_bam == "":
-            print('Not setting A bulk bam. Cheak {0}'.format(self.bam_txt))
-            sys.exit()
-
         self.output_name=self.p1_name
-        self.bam_list=self.p1_bam
 
-        if self.p2_bam != "":
+        if self.p2_name != "":
             self.output_name=self.output_name+"."+self.p2_name
-            self.bam_list=self.bam_list+" "+self.p2_bam
             self.filt_pattern=self.filt_pattern+":1"
             self.filt_line=self.filt_line+":2"
             self.filt_count=self.filt_count+1
             self.plot_name=self.plot_name+"."+self.p2_name+"_homo"
 
-        if self.f1_bam != "":
+        if self.f1 :
             self.output_name=self.output_name+".F1"
-            self.bam_list=self.bam_list+" "+self.f1_bam
             self.filt_pattern=self.filt_pattern+":3"
             self.filt_line=self.filt_line+":3"
             self.filt_count=self.filt_count+1
             self.plot_name=self.plot_name+".F1_hetero"
 
         self.output_name=self.output_name+"."+self.bulkA_name
-        self.bam_list=self.bam_list+" "+self.bulkA_bam
         self.plot_name=self.plot_name+"."+self.bulkA_name
 
-        if self.bulkB_bam != "":
+        if self.bulkB_name != "":
             self.output_name=self.output_name+"."+self.bulkB_name
-            self.bam_list=self.bam_list+" "+self.bulkB_bam
             self.bulk_info=self.bulk_info+"\t"+self.bulkB_name
             self.plot_name=self.plot_name+"."+self.bulkB_name
 
         self.plot_snpindex_txt="{0}/24_filt/{1}.snp_index.txt".format(self.output_dir,self.plot_name)
 
-    def step22(self):
-        os.makedirs('{}/22_vcf'.format(self.output_dir), exist_ok=True)
-        output_dir_aln=self.output_dir+"/22_vcf"
-        mpileup = Mpileup(output_dir_aln,self.bam_list,self.ref_fa,self.thread,self.output_name)
-        mpileup.run()
-
     def step23(self):
         os.makedirs('{}/23_snpindex'.format(self.output_dir), exist_ok=True)
         output_dir_aln=self.output_dir+"/23_snpindex"
-        target_vcf="{0}/22_vcf/{1}.vcf".format(self.output_dir,self.output_name)
-        snpindex = Snpindex(output_dir_aln,target_vcf,self.output_name)
+        snpindex = Snpindex(output_dir_aln,self.vcf,self.output_name)
         snpindex.run()
 
     def step24(self):
@@ -268,14 +215,16 @@ class QTLseq(object):
     def run(self):
         os.makedirs('{}'.format(self.output_dir), exist_ok=True)
         os.makedirs('{}/log'.format(self.output_dir), exist_ok=True)
-        self.step22()
         self.step23()
         self.step24()
         self.step30()
         self.step40()
 
+def main():
+    Mqtlseq_snpindex().run()
+
 if __name__ == '__main__':
-    print(time_stamp(), 'start to run QTL-seq.', flush=True)
-    QTLseq().run()
-    print(time_stamp(), 'QTL-seq successfully finished.\n', flush=True)
+    print(time_stamp(), 'start to run modified QTL-seq.', flush=True)
+    Mqtlseq_snpindex().main()
+    print(time_stamp(), 'modified QTL-seq successfully finished.\n', flush=True)
 

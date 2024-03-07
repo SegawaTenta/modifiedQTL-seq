@@ -1,18 +1,17 @@
-import sys
-import os
-import re
 import subprocess as sbp
-from utils import time_stamp, clean_cmd, call_log
+from mqtlseq.utils import time_stamp, clean_cmd, call_log
 import pandas as pd
 
 class Mpileup(object):
 
-    def __init__(self,output_dir_aln,bam_list,ref,thread,output_name):
+    def __init__(self,output_dir_aln,bam_list,ref,thread,output_name,base_quality,mapping_quality):
         self.output_dir = output_dir_aln
         self.ref = ref
         self.bam_table = bam_list
         self.thread = thread
         self.output_name = output_name
+        self.base_quality = base_quality
+        self.mapping_quality = mapping_quality
 
     def run(self):
         print(time_stamp(),
@@ -38,11 +37,13 @@ class Mpileup(object):
 
         for chr in chr_item:
 
-            mpile_format = 'bcftools mpileup -r {0} -a AD,DP -B -q 40 -Q 18 -O u -f {1} --ignore-RG {2} 1>{3}/{0}.{4}.bcf 2>>{3}/../log/bcftools.log\n'.format(chr,
+            mpile_format = 'bcftools mpileup -r {0} -a AD,DP -B -q {5} -Q {6} -O u -f {1} --ignore-RG {2} 1>{3}/{0}.{4}.bcf 2>>{3}/../log/bcftools.log\n'.format(chr,
                                                                                                                                                          self.ref,
                                                                                                                                                          self.bam_table,
                                                                                                                                                          self.output_dir,
-                                                                                                                                                         output_name)
+                                                                                                                                                         output_name,
+                                                                                                                                                         self.mapping_quality,
+                                                                                                                                                         self.base_quality)
 
             call_format = 'bcftools call -vm -O u {0}/{2}.{1}.bcf 1>{0}/{2}.{1}.call.bcf 2>>{0}/../log/bcftools.log\n'.format(self.output_dir,output_name,chr)
 

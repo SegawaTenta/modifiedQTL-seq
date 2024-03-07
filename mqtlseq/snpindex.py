@@ -1,8 +1,4 @@
-import sys
-import os
-import re
-import subprocess as sbp
-from utils import time_stamp, clean_cmd, call_log
+from mqtlseq.utils import time_stamp, clean_cmd, call_log
 
 
 class Snpindex(object):

@@ -1,7 +1,4 @@
-import sys
-import os
-import re
-from utils import time_stamp, clean_cmd, call_log
+from mqtlseq.utils import time_stamp, clean_cmd, call_log
 import pandas as pd
 import matplotlib.pyplot as plt
 import math
@@ -323,7 +320,7 @@ class Qtlplot(object):
             plt.xlim(0,maxposi)
             plt.ylim(-1,1)
             plt.xlabel("chr position(Mb)",fontsize=9)
-            plt.ylabel("SNP-index",fontsize=9)
+            plt.ylabel("deltaSNP-index",fontsize=9)
             plt.gca().spines['right'].set_visible(False)
             plt.gca().spines['top'].set_visible(False)
 

@@ -1,11 +1,9 @@
-import sys
 import os
 import re
-import subprocess as sbp
 import random
 import pandas as pd
 import scipy.stats as st
-from utils import time_stamp, clean_cmd, call_log
+from mqtlseq.utils import time_stamp, clean_cmd, call_log
 
 class Filt(object):
 
@@ -24,16 +22,15 @@ class Filt(object):
 
     def readsim_f1(self):
 
-        if os.path.isfile("script/sim/F1_sim.txt"):
-            sim_file = open("script/sim/F1_sim.txt", "r")
-            for sim_file_line in sim_file:
-                sim_file_line = sim_file_line.replace('\n','')
-                array = sim_file_line.split('\t')
-                depth=int(array[0])
-                under=str(array[1])
-                top=str(array[2])
-                self.output_file2.write("{0}\t{1}\t{2}\n".format(depth,under,top))
-                self.mydict[depth] = under+":"+top
+        sim_file = open("{0}/mqtlseq/F1_sim.txt".format(os.path.dirname(__file__)), "r")
+        for sim_file_line in sim_file:
+            sim_file_line = sim_file_line.replace('\n','')
+            array = sim_file_line.split('\t')
+            depth=int(array[0])
+            under=str(array[1])
+            top=str(array[2])
+            self.output_file2.write("{0}\t{1}\t{2}\n".format(depth,under,top))
+            self.mydict[depth] = under+":"+top
 
     def sim_f1(self,depth):
         p95_d=int(int(self.replicatipn)*0.025)
