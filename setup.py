@@ -12,9 +12,9 @@ setup(
     packages=['mqtlseq'],
     entry_points={
         'console_scripts': [
-            'mqtlseq=mqtlseq.mqtlseq:main'
-            'mqtlseq_mpileup=mqtlseq.mqtlseq_mpileup:main'
-            'mqtlseq_snpindex=mqtlseq.mqtlseq_snpindex:main'
+            'mqtlseq=mqtlseq.mqtlseq:main',
+            'mqtlseq_mpileup=mqtlseq.mqtlseq_mpileup:main',
+            'mqtlseq_snpindex=mqtlseq.mqtlseq_snpindex:main',
             'mqtlseq_plot=mqtlseq.mqtlseq_plot:main'
         ]
     }
