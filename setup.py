@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from setuptools import setup, find_packages
-from modified.__init__ import __version__
+from mqtlseq.__init__ import __version__
 
 setup(
     name="modified QTL-seq",
